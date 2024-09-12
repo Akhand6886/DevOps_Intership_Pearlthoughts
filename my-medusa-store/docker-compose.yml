@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  medusa:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: medusa_server
+    environment:
+      DATABASE_URL: postgres://postgres:123456789abc@localhost:5432/medusa-db-jkzud
+      NODE_ENV: development
+      JWT_SECRET: your_jwt_secret
+      COOKIE_SECRET: your_cookie_secret
+    ports:
+      - "9000:9000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - app-network
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456789abc
+      POSTGRES_DB: medusa-store
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
